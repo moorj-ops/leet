@@ -11,13 +11,13 @@
  */
 class Solution {
 public:
-int findPosition(vector<int> &inorder,int element,int size){
+void createMapping(vector<int> &inorder,int size,map<int,int> &p){
     for(int i=0;i<size;i++){
-        if(inorder[i]==element)
-            return i;
-    }return -1;
+        //i se kya indexing assign ho jayegi inorder ke elements
+        p[inorder[i]]=i;
+    }
 }
-    TreeNode* solve(vector<int>& inorder, vector<int>& preorder,int &preOrderIndex,int inOrderStart,int inOrderEnd,int size){
+    TreeNode* solve(vector<int>& inorder, vector<int>& preorder,int &preOrderIndex,int inOrderStart,int inOrderEnd,int size,map<int,int> &p){
         if(preOrderIndex>=size || inOrderStart>inOrderEnd){
             return NULL;
         }
@@ -26,15 +26,18 @@ int findPosition(vector<int> &inorder,int element,int size){
         //create
         TreeNode* temp=new TreeNode(element);
         //finding the position of element in inorder traversal 
-        int position=findPosition(inorder,element,size);
-        temp->left=solve(inorder,preorder,preOrderIndex,inOrderStart,position-1,size);
-        temp->right=solve(inorder,preorder,preOrderIndex,position+1,inOrderEnd,size);
+        int position=p[element];
+        temp->left=solve(inorder,preorder,preOrderIndex,inOrderStart,position-1,size,p);
+        temp->right=solve(inorder,preorder,preOrderIndex,position+1,inOrderEnd,size,p);
         return temp;
     }
     TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
         int preOrderIndex=0;
+        map<int,int> p;
         int n=inorder.size();
-        TreeNode* ans=solve(inorder,preorder,preOrderIndex,0,n-1,n);
+        createMapping(inorder,n,p);
+        
+        TreeNode* ans=solve(inorder,preorder,preOrderIndex,0,n-1,n,p);
         return ans;
     }
 };
