@@ -12,35 +12,41 @@
 class Solution {
 public:
     vector<vector<int>> levelOrder(TreeNode* root) {
-        queue<TreeNode*> q;
-        vector<vector<int>> ans;
-        if(root==NULL) return ans;
+        queue<TreeNode *> q;
+        //level 0
         q.push(root);
         q.push(NULL);
-        vector<int> level;
+        vector<int> ans;
+        vector<vector<int>> final_ans;
+        if (root == NULL) return final_ans;
         while(!q.empty()){
-            TreeNode* temp=q.front();
+            TreeNode *temp=q.front();
             q.pop();
-            if(temp==NULL){//pehle wala level pura ho gyaa toh temp ki jagah par NULL  hai
-                ans.push_back(level);
-                level.clear();
+            if(temp==NULL){
+                //
+                final_ans.push_back(ans);
+                ans.clear();
                 if(!q.empty()){
-                     q.push(NULL);//queue has child node
+                    q.push(NULL);
                 }
-               
+
             }
             else{
-                //cout<<temp->val<<" ";
-                level.push_back(temp->val);
-                if(temp->left){
+                ans.push_back(temp->val);
+                if(temp->left!=NULL){
                     q.push(temp->left);
+
+
                 }
-                if(temp->right){
+                if(temp->right!=NULL){
                     q.push(temp->right);
                 }
+                
             }
+            
         }
 
-       return ans; 
+               
+    return final_ans;       
     }
 };
