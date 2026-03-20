@@ -11,33 +11,32 @@
  */
 class Solution {
 public:
-void createMapping(vector<int> &inorder,int size,map<int,int> &p){
-    for(int i=0;i<size;i++){
-        //i se kya indexing assign ho jayegi inorder ke elements
-        p[inorder[i]]=i;
-    }
-}
-    TreeNode* solve(vector<int>& inorder, vector<int>& preorder,int &preOrderIndex,int inOrderStart,int inOrderEnd,int size,map<int,int> &p){
-        if(preOrderIndex>=size || inOrderStart>inOrderEnd){
-            return NULL;
+    int findposition(vector<int>& inorder,int element,int n){
+        for(int i=0;i<n;i++){
+            if(inorder[i]==element){
+                return i;
+            }
         }
-        //find the element at the index
-        int element=preorder[preOrderIndex++];
-        //create
-        TreeNode* temp=new TreeNode(element);
-        //finding the position of element in inorder traversal 
-        int position=p[element];
-        temp->left=solve(inorder,preorder,preOrderIndex,inOrderStart,position-1,size,p);
-        temp->right=solve(inorder,preorder,preOrderIndex,position+1,inOrderEnd,size,p);
-        return temp;
+        return -1;
     }
+    TreeNode *solve(vector<int>& inorder, vector<int>& preorder,int &index,int inorderstart,int inorderend,int n){
+        //base case
+        if(index>=n || inorderstart>inorderend ){
+            return NULL;
+
+        }
+        int element=preorder[index++];
+        TreeNode* root =new TreeNode(element);
+        int position=findposition(inorder,element,n);
+        root->left=solve(inorder, preorder,index,inorderstart,position -1,n);
+        root->right=solve(inorder, preorder,index,position+1,inorderend,n);
+        return root;
+    }
+
     TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
-        int preOrderIndex=0;
-        map<int,int> p;
-        int n=inorder.size();
-        createMapping(inorder,n,p);
-        
-        TreeNode* ans=solve(inorder,preorder,preOrderIndex,0,n-1,n,p);
+        int index=0;
+        int n=preorder.size();
+        TreeNode * ans=solve(inorder,preorder,index,0,n-1,n);
         return ans;
     }
 };
